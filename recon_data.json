@@ -1,0 +1,22 @@
+{
+  "DIV_ONE_usec" : 1000000,
+  "FIELD" : 1500,
+  "GAMMA": 42577000,
+  "K" : 6.8100e-19,
+  "MIN_TE" : 0,
+  "MIN_TR" :0,
+  "ONE_MHz" :1000,
+  "ONE_KHz" : 1000000,
+  "ONE_mt": 0.0010000,
+  "ONE_mm" : 0.0010000,
+  "ONE_msec" : 0.0010000,
+  "ONE_ut" : 0.0000010000,
+  "ONE_USEC" : 0.0000010000,
+  "SAR" : "...",
+  "nbytes" : 4,
+  "readOS" : 2,
+  "reference_angle" : 90,
+  "resistivity" : 16000,
+  "sampling_rate" : 1000000,
+  "specific_gravity" : 1.0700
+}
