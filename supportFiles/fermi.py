@@ -1,8 +1,9 @@
 import numpy as np
 
 def fermi(xdim, cutoff, trans_width, offset):
-    x = [i for i in range(((-xdim) / 2 + offset),(xdim) / 2  + offset)]
-    y = [i for i in range((-xdim) / 2,(xdim)/ 2 )]
+
+    x = [i for i in range(int((-xdim) / 2 + (offset)),int(xdim / 2  + offset))]
+    y = [i for i in range(int((-xdim) / 2),int((xdim)/ 2 ))]
     (X, Y) = np.meshgrid(x, y)
     radius = (X * X + Y * Y) ** 0.5
     ffilter = (1.0/(1+(np.exp((radius - cutoff)/trans_width))))

@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from map_code import map_code
+from supportFiles.map_code import map_code
 
 def coil_maps(I):
 
@@ -25,7 +25,6 @@ def coil_maps(I):
             calib_data[i][j] = I[dim1[i]][dim2[j]][:]
 
     calib_data = np.squeeze(calib_data)
-
     row = np.shape(I)[1]
     col = np.shape(I)[1]
 

@@ -171,8 +171,10 @@ for slice_count in range(0, number_of_slices):
         Temp = np.fft.ifftshift(Temp)+np.fft.ifftshift(Temp_comp)
         Temp = np.fft.ifft2(Temp)
         Temp = np.fft.ifftshift(Temp)
+
         for i in range(len(Temp)):
             Temp[i] = np.roll(Temp[i],[0,30])
+
         center_v = 0.5 * (Temp[int(yres / 2)-1, int(xres / 2)-1] + Temp[int(yres / 2) + 1, int(xres / 2) + 1])
         Temp[int(yres / 2),:]   = 0.5 * (Temp[int(yres / 2),:] +  Temp[int(yres / 2) - 2,:])
         Temp[int(yres / 2), int(xres / 2)] = center_v
@@ -180,14 +182,18 @@ for slice_count in range(0, number_of_slices):
         for x in range(int(round(xres / 2) - round(0.5 * xres / oversample_factor)),int(round(xres / 2) + round(0.5 * xres / oversample_factor))):
             check.append(x)
         Temp = Temp[:, check]
-        # print np.shape(Temp)
+
         Temp = np.fft.fftshift(Temp)
-        Temp = np.fft.fft(np.fft.fft(Temp))
+        # print(Temp[0,0])
+        Temp = np.fft.fft2(Temp)
+        # print(Temp[0, 0])
+
         Temp = np.fft.fftshift(Temp)
         Temp = f_filter * Temp
+        # print(Temp[0,0])
 
         diag = np.array(np.squeeze(np.exp(complex(0,-1) * spoiler_phase)))
-        # print diag
+
         Temp_diag = np.diag(diag)
         Temp[:,:] = np.dot(Temp_diag, Temp)
 

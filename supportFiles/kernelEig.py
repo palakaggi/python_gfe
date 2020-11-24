@@ -7,6 +7,7 @@ def zpad(arr,size):
     padDim2 = (size[1] - np.shape(arr)[1])/2
     padDim3 = (size[2] - np.shape(arr)[2])/2
     ans = np.pad(arr,((padDim1,padDim1),(padDim2,padDim2),(padDim3,padDim3)),'constant')
+    print("Hi i am here")
     return ans
 
 def kernelEig(kernel,imSize):
@@ -14,15 +15,13 @@ def kernelEig(kernel,imSize):
     nc = np.shape(kernel)[2]
     nv = np.shape(kernel)[3]
     kSize = [np.shape(kernel)[0],np.shape(kernel)[1]]
-    print(np.shape(kernel))
-    import sys
-    sys.exit()
+
     # "rotate kernel to order by maximum variance"
     k = np.moveaxis(kernel, (0,1,2,3),(0, 1, 3, 2))
     # k = np.transpose(k)
     k = np.reshape(k,(np.prod(kSize)*nv,nc),order='F')
-    print np.shape(k)
-    # print k[1789][7]
+    print (np.shape(k))
+    print (k[0,0])
     import sys
     sys.exit()
     if np.shape(k)[0] < np.shape(k)[1]:
@@ -50,16 +49,16 @@ def kernelEig(kernel,imSize):
         import sys
         sys.exit()
         Temp = zpad(np.conj(kernel[::-1, ::-1, :, n]), (imSize[0], imSize[1], np.shape(kernel)[2]))
-        print np.shape(Temp)
-        print Temp[125][125][0]
+        print (np.shape(Temp))
+        print (Temp[125][125][0])
 
         Temp = np.fft.fft2(np.fft.fftshift(Temp))
         # Temp = (Temp)
-        print Temp[0,0,0]
+        print (Temp[0,0,0])
         import sys
         sys.exit()
         Temp = np.fft.fftshift(Temp)
-        print Temp[125][125][0]
+        print (Temp[125][125][0])
 
         import sys
         sys.exit()
