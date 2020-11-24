@@ -20,14 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26b4c0db-d0ad-4f46-b0a1-c26eb2dd92d3" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Python_gfeRecon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Python_gfeRecon.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gfeRecon_test_average_python.py" beforeDir="false" afterPath="$PROJECT_DIR$/gfeRecon_test_average_python.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/supportFiles/coil_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/supportFiles/coil_maps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/supportFiles/fermi.py" beforeDir="false" afterPath="$PROJECT_DIR$/supportFiles/fermi.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/supportFiles/kernelEig.py" beforeDir="false" afterPath="$PROJECT_DIR$/supportFiles/kernelEig.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/supportFiles/map_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/supportFiles/map_code.py" afterDir="false" />
     </list>
@@ -150,21 +143,21 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1419" height="179" key="GridCell.Tab.0.bottom" timestamp="1606154338074">
+    <state width="1419" height="179" key="GridCell.Tab.0.bottom" timestamp="1606249624260">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1606154338074" />
-    <state width="1419" height="179" key="GridCell.Tab.0.center" timestamp="1606154338072">
+    <state width="1419" height="179" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1606249624260" />
+    <state width="1419" height="179" key="GridCell.Tab.0.center" timestamp="1606249624259">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1606154338072" />
-    <state width="1419" height="179" key="GridCell.Tab.0.left" timestamp="1606154338071">
+    <state width="1419" height="179" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1606249624259" />
+    <state width="1419" height="179" key="GridCell.Tab.0.left" timestamp="1606249624259">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1606154338071" />
-    <state width="1419" height="179" key="GridCell.Tab.0.right" timestamp="1606154338073">
+    <state width="1419" height="179" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1606249624259" />
+    <state width="1419" height="179" key="GridCell.Tab.0.right" timestamp="1606249624260">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1606154338073" />
+    <state width="1419" height="179" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1606249624260" />
   </component>
 </project>

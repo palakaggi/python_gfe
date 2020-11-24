@@ -13,12 +13,14 @@ def map_code(ref,rsize,csize):
     A = np.reshape(A,[row,col*nc],order='F')
 
     [U,S,V] = np.linalg.svd(A,full_matrices=False)
-    # V = np.conj(np.transpose(V))
+    V = np.conj(np.transpose(V))
+    # print(V[156,182])
 
     k = np.reshape(V, (kernel[0],kernel[1],nc,(np.shape(V)[1])),order = 'F')
     cutoff = int(max(np.argwhere(S>=S[0]*eigvalThresh)))
 
     k = k[:,:,:,0:cutoff+1]
+    # print(k[0,1,2,3])
 
     [M, W] = kernelEig.kernelEig(k, [rsize, csize])
 
