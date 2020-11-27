@@ -1,6 +1,7 @@
 import numpy as np
 from supportFiles import calibMatrix
 from supportFiles import kernelEig
+import numpy.matlib.repmat
 
 def map_code(ref,rsize,csize):
 
@@ -23,6 +24,10 @@ def map_code(ref,rsize,csize):
     # print(k[0,1,2,3])
 
     [M, W] = kernelEig.kernelEig(k, [rsize, csize])
+    # print(W[44,200,:])
+    # import sys
+    # sys.exit()
+    # maps = M[:,:,:,-1]*matlib.repmat()
 
     # print (np.argwhere(S>=S[0]*eigvalThresh))
 

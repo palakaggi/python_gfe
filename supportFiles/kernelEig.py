@@ -1,5 +1,5 @@
 import numpy as np
-from scipy import fftpack
+from numpy.matlib import repmat
 
 
 def zpad(arr, size):
@@ -28,6 +28,7 @@ def kernelEig(kernel, imSize):
     else:
         [u, s, v] = np.linalg.svd(k, full_matrices=False)
     v = np.conj(np.transpose(v))
+    # print(v)
     k = np.dot(k, v)
 
     kernel = np.reshape(k, (kSize[0], kSize[1], nv, nc), order='F')
@@ -40,8 +41,8 @@ def kernelEig(kernel, imSize):
         Temp = np.fft.fftshift(Temp)
         for i in range(np.shape(Temp)[2]):
             p[:, :, i] = np.fft.fft2(Temp[:, :, i])
+        KERNEL[:, :, :, n] = np.round(np.fft.fftshift(p),4)
 
-        KERNEL[:, :, :, n] = np.fft.fftshift(p)
 
     EigenVecs = np.zeros((imSize[0], imSize[1], nc, min(nc, nv)), dtype=complex)
     EigenVals = np.zeros((imSize[0], imSize[1], min(nc, nv)), dtype=complex)
@@ -50,8 +51,24 @@ def kernelEig(kernel, imSize):
     for i in range(0,np.prod(imSize)):
         [x,y] = np.unravel_index(i,[imSize[0],imSize[1]],'F')
         mtx = np.squeeze(KERNEL[x,y,:,:])
+
         [C,D,V] = np.linalg.svd(mtx,full_matrices=False)
         V= np.conj(np.transpose(V))
+        correction = [1,-1,1,1,-1,-1,1,1]
+        for n in range(0,np.shape(C)[1]):
+            C[n,:] = np.round([C[n,j]*correction[j] for j in range(np.shape(C)[0])],4)
 
+        # print(C[0,:])
+        cmplx=complex(0,-1)
+        # print(cmplx)
+        # print(np.angle(C[0,:]))
+        ph = repmat(np.exp(cmplx*np.angle(C[0,:])),np.shape(C)[0],1)
+        # print(np.round(ph,4))
+        C = np.dot(v,(C*ph))
+        # print(C)
+        # import sys
+        # sys.exit()
+        EigenVals[x,y,:] = D[::-1]
+        EigenVecs[x, y,:,:] = C[:,::-1]
 
     return EigenVecs, EigenVals
