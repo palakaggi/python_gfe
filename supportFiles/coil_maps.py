@@ -29,4 +29,5 @@ def coil_maps(I):
     col = np.shape(I)[1]
 
     coil_maps = map_code(calib_data,row,col)
+    # print(coil_maps[129,45,4])
     return coil_maps

@@ -58,16 +58,10 @@ def kernelEig(kernel, imSize):
         for n in range(0,np.shape(C)[1]):
             C[n,:] = np.round([C[n,j]*correction[j] for j in range(np.shape(C)[0])],4)
 
-        # print(C[0,:])
         cmplx=complex(0,-1)
-        # print(cmplx)
-        # print(np.angle(C[0,:]))
         ph = repmat(np.exp(cmplx*np.angle(C[0,:])),np.shape(C)[0],1)
-        # print(np.round(ph,4))
         C = np.dot(v,(C*ph))
-        # print(C)
-        # import sys
-        # sys.exit()
+
         EigenVals[x,y,:] = D[::-1]
         EigenVecs[x, y,:,:] = C[:,::-1]
 

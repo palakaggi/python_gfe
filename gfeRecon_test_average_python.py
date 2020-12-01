@@ -2,7 +2,8 @@ from mat4py import loadmat
 import datetime
 import numpy as np
 import math
-from supportFiles import fermi, coil_maps
+from supportFiles import fermi, coil_maps, image_recombination, fixAspectRatio
+import cv2
 
 now = datetime.datetime.now()
 
@@ -207,13 +208,24 @@ for slice_count in range(0, number_of_slices):
 
 cmap   = coil_maps.coil_maps(Temp_coil_maps_input)
 
+[SOS_im,C_im] = image_recombination.imageRecombination(cmap,im)
 
-SOS_im = np.sqrt(np.sum(abs(im)**2,2))/len(Rx)
-SOS_im = SOS_im/(max(map(max, SOS_im)))
-# print (SOS_im[56][190])
-# if UI['flipAxes'] == 'Yes':
-#     SOS_im = flip(rot90(SOS_im,1),2);
 
+C_im = C_im/np.max(C_im)
+# print(C_im[87,67])
+
+centerX = np.round(0.5*float(np.shape(C_im)[0]))+1
+centerY = np.round(0.5*float(np.shape(C_im)[1]))+1
+
+dim1 = np.round(0.5*np.shape(C_im)[0])
+dim2 = np.round(0.5*np.shape(C_im)[1])
+C_im = C_im[int(centerX - dim1)-1 : int(centerX + dim1-1), int(centerY - dim2 )-1: int(centerY + dim2-1)]
+print(C_im[86,202])
+# C_im = cv2.bilateralFilter(C_im,sigmaSpace=1,sigmaColor=0.5,d=1)
+# print(C_im[86,202])
+C_im = fixAspectRatio.fix_aspect_ratio(UI,C_im)
+import sys
+sys.exit()
 end = datetime.datetime.now()
 
 print(end - now)
