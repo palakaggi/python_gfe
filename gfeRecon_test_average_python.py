@@ -3,7 +3,10 @@ import datetime
 import numpy as np
 import math
 from supportFiles import fermi, coil_maps, image_recombination, fixAspectRatio
-import cv2
+from scipy import interpolate
+
+from matplotlib import pylab
+from pylab import *
 
 now = datetime.datetime.now()
 
@@ -220,12 +223,39 @@ centerY = np.round(0.5*float(np.shape(C_im)[1]))+1
 dim1 = np.round(0.5*np.shape(C_im)[0])
 dim2 = np.round(0.5*np.shape(C_im)[1])
 C_im = C_im[int(centerX - dim1)-1 : int(centerX + dim1-1), int(centerY - dim2 )-1: int(centerY + dim2-1)]
+C_im = cv2.bilateralFilter(C_im,sigmaSpace = 1,sigmaColor = 0.5)
 print(C_im[86,202])
-# C_im = cv2.bilateralFilter(C_im,sigmaSpace=1,sigmaColor=0.5,d=1)
-# print(C_im[86,202])
-C_im = fixAspectRatio.fix_aspect_ratio(UI,C_im)
-import sys
-sys.exit()
+# C_im = fixAspectRatio.fix_aspect_ratio(UI,C_im)
+
+print(C_im[86,202])
+x = np.transpose([x for x in range(0,np.shape(C_im)[0])])
+y = np.transpose([y for y in range(0,np.shape(C_im)[1])])
+xq = np.transpose([x for x in np.arange(0,np.shape(C_im)[0],np.shape(C_im)[0]/Recon_resolution)])
+yq = np.transpose([y for y in np.arange(0,np.shape(C_im)[1],np.shape(C_im)[1]/Recon_resolution)])
+[X,Y] = np.meshgrid(x,y)
+[Xq,Yq] = np.meshgrid(xq,yq)
+
+# eng = matlab.engine.start_matlab()
+# corrected_image = eng.interp2(X,Y,C_im,Xq,Yq,'spline')
+# print(np.shape(corrected_image))
+# import sys
+# sys.exit()
+# corrected_image = interpolate.interp2d(X,Y,C_im,'spline')
+
+
+# WRITING DICOM FILE:
+for slice_count in range(0,number_of_slices):
+    filepath = 'C:\dicomImages\\'
+    T = str(slice_count)
+    filepath = filepath+T
+    filepath = filepath+'.dcm'
+    print(filepath)
+    import sys
+    sys.exit()
+
+    # eng.dicomwrite(uint16(round(output(:,:,slice_count))),str)
+
+
 end = datetime.datetime.now()
 
 print(end - now)

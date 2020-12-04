@@ -21,11 +21,11 @@ def fix_aspect_ratio(UI,SOS_im):
     [Xq,Yq] = np.meshgrid(xi,yi)
     # print(X[199,66])
     fixed_image = interpolate.interp2d(X,Y,SOS_im,kind= 'linear')
-    Zi=[]
+    # Zi=[]
     # Zi = fixed_image(Xq,Yq)
-    for i,j in zip(Xq,Yq):
-        Zi.append(fixed_image(i,j))
+    # for i,j in zip(Xq,Yq):
+    #     Zi.append(fixed_image(i,j))
 
-    print(type(fixed_image))
-    print(np.shape(Zi))
+    # print(type(fixed_image))
+    # print(np.shape(Zi))
 
