@@ -1,13 +1,13 @@
 from mat4py import loadmat
-import datetime
-import numpy as np
-import math
+# import datetime
+# import numpy as np
+# import math
 import cv2
 from supportFiles import fermi, coil_maps, image_recombination, fixAspectRatio
-from scipy import interpolate
-from skimage import *
+# from scipy import interpolate
 
-from matplotlib import pylab
+
+# from matplotlib import pylab
 from pylab import *
 
 now = datetime.datetime.now()
@@ -53,7 +53,7 @@ for rx_card in range(chassis_cards):
         sig[num_channels + rx_card * num_channels_per_card, :] = bdata[
             rx_card, np.arange(0 + num_channels * 2, bdata[rx_card, :].size, sample_skip)]
         sig_complex[num_channels + rx_card * num_channels_per_card, :] = (
-        bdata[rx_card, np.arange(1 + num_channels * 2, bdata[rx_card, :].size, sample_skip)])
+            bdata[rx_card, np.arange(1 + num_channels * 2, bdata[rx_card, :].size, sample_skip)])
 
 sig_complex1 = 1j * sig_complex
 
@@ -77,7 +77,7 @@ def gfeSpoilPhase(nr_of_pe):
     maximum_angle = 2 * math.pi
     angle_array[0, 0] = spoiler_angle
     for counter in range(1, nr_of_pe):
-        angle_array[counter, 0] = angle_array[counter - 1, 0] + (counter) * spoiler_angle
+        angle_array[counter, 0] = angle_array[counter - 1, 0] + counter * spoiler_angle
         angle_array[counter, 0] = angle_array[counter, 0] % maximum_angle
     return angle_array
 
@@ -85,10 +85,10 @@ def gfeSpoilPhase(nr_of_pe):
 # DEFINING SPOILER PHASE BASED ON VALUE OF gfeVariant:
 if UI['gfeVariants'] == 'Spoilt':
     spoiler_phase = gfeSpoilPhase(yres)
-elif (UI['gfeVariants'] == 'SSFP'):
+elif UI['gfeVariants'] == 'SSFP':
     spoiler_phase = np.zeros(yres, 1)
     spoiler_phase[1::2] = math.pi
-elif (UI['gfeVariants'] == 'Default'):
+elif UI['gfeVariants'] == 'Default':
     spoiler_phase = np.zeros(yres, 1)
 
 # DEFINING AVG_SIGNAL BASED ON UI.SIGNALAVERAGES:
@@ -118,10 +118,10 @@ if UI['signalAverages'] > 1:
         sig = np.zeros((int(total_channels), int(temp_val)), dtype=float)
         for rx_card in range(chassis_cards):
             for num_channels in range(0, num_channels_per_card):
-                sig[num_channels + (rx_card) * num_channels_per_card] = bdata[
+                sig[num_channels + rx_card * num_channels_per_card] = bdata[
                     rx_card, np.arange(0 + num_channels * 2, bdata[rx_card].size, sample_skip)]
                 sig_complex[num_channels + rx_card * num_channels_per_card, :] = (
-                bdata[rx_card, np.arange(1 + num_channels * 2, bdata[rx_card, :].size, sample_skip)])
+                    bdata[rx_card, np.arange(1 + num_channels * 2, bdata[rx_card, :].size, sample_skip)])
 
         sig = np.reshape(sig, (int(total_channels), int(xres), int(number_of_slices), int(yres)), order='F')
         sig = np.moveaxis(sig, (0, 1, 2, 3), (-2, -3, -1, -4))
@@ -167,9 +167,9 @@ else:
 # print(Rx)
 pixvalX = -round(UI['offCenterX'] / (UI['fovX'] / UI['resolutionX']))
 pixvalY = -round(UI['offCenterX'] / (UI['fovY'] / UI['resolutionY']))
-if (UI['sliceOrientation'] == 'Coronal'):
+if UI['sliceOrientation'] == 'Coronal':
     pixvalY = 0
-if (UI['sliceOrientation'] == 'Sagittal'):
+if UI['sliceOrientation'] == 'Sagittal':
     pixvalX = 0
 
 im = np.zeros((np.shape(sig)[0], np.shape(sig)[0], len(Rx)), dtype=complex)
@@ -238,14 +238,14 @@ C_im = C_im[int(centerX - dim1) - 1: int(centerX + dim1 - 1), int(centerY - dim2
 C_im_cv = np.float32(C_im)
 # print(C_im_cv.dtype)
 # print(C_im_cv[86, 202])
-C_im = cv2.bilateralFilter(C_im_cv, sigmaSpace=0.5,sigmaColor=100,d=9)
+C_im = cv2.bilateralFilter(C_im_cv, sigmaSpace=0.5, sigmaColor=100, d=9)
 # print(np.shape(C_im))
 # print(C_im[86, 202])
 C_im_cv = C_im.astype(np.float64)
 # print(C_im_cv[86, 202])
 # imshow(C_im_cv)
 
-C_im = fixAspectRatio.fix_aspect_ratio(UI,C_im)
+C_im = fixAspectRatio.fix_aspect_ratio(UI, C_im)
 print(C_im[86, 202])
 
 x = np.transpose([x for x in range(0, np.shape(C_im)[0])])
