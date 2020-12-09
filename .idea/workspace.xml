@@ -51,7 +51,7 @@
   <component name="PropertiesComponent">
     <property name="FullScreen" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../SEPromSupplementaryData/SEProm" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="recentsLimit" value="5" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -126,6 +126,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -135,30 +136,31 @@
       <collection />
     </option>
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
   <component name="WindowStateProjectService">
-    <state width="1419" height="179" key="GridCell.Tab.0.bottom" timestamp="1607059743422">
+    <state width="1419" height="172" key="GridCell.Tab.0.bottom" timestamp="1607494106835">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1607059743422" />
-    <state width="1419" height="179" key="GridCell.Tab.0.center" timestamp="1607059743421">
+    <state width="1419" height="172" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1607494106835" />
+    <state width="1419" height="172" key="GridCell.Tab.0.center" timestamp="1607494106834">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1607059743421" />
-    <state width="1419" height="179" key="GridCell.Tab.0.left" timestamp="1607059743420">
+    <state width="1419" height="172" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1607494106834" />
+    <state width="1419" height="172" key="GridCell.Tab.0.left" timestamp="1607494106833">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1607059743420" />
-    <state width="1419" height="179" key="GridCell.Tab.0.right" timestamp="1607059743422">
+    <state width="1419" height="172" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1607494106833" />
+    <state width="1419" height="172" key="GridCell.Tab.0.right" timestamp="1607494106834">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="179" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1607059743422" />
+    <state width="1419" height="172" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1607494106834" />
     <state x="283" y="42" key="SettingsEditor" timestamp="1606895537840">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="283" y="42" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1606895537840" />
+    <state width="600" height="428" key="javadoc.popup" timestamp="1607416460658">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="600" height="428" key="javadoc.popup/0.0.1440.900@0.0.1440.900" timestamp="1607416460658" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1606513403372">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

@@ -19,7 +19,7 @@ def fix_aspect_ratio(UI,SOS_im):
 
     [X,Y] = np.meshgrid(x,y)
     [Xq,Yq] = np.meshgrid(xi,yi)
-    # print(X[199,66])
+    print(Xq[19,75])
     fixed_image = interpolate.interp2d(X,Y,SOS_im,kind= 'linear')
     # Zi=[]
     # Zi = fixed_image(Xq,Yq)
