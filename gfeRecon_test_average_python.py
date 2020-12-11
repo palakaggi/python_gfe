@@ -1,11 +1,10 @@
 from mat4py import loadmat
-# import datetime
-# import numpy as np
-# import math
 import cv2
 from supportFiles import fermi, coil_maps, image_recombination, fixAspectRatio
-# from scipy import interpolate
-
+from scipy import interpolate
+from PIL import Image
+import matplotlib.pyplot as plt
+import scipy.misc
 
 # from matplotlib import pylab
 from pylab import *
@@ -220,68 +219,85 @@ for slice_count in range(0, number_of_slices):
         im[:, :, j] = np.fft.ifft2(im[:, :, j])
         im[:, :, j] = np.fft.ifftshift(im[:, :, j])
 # ===================================================================================================
+#     print(np.shape(Rx))
+    for i in range(0, np.shape(Rx)[0]):
+        plt.subplot(5,5,i+1)
+        imshow(abs(im[:,:,i]),cmap='gray')
+    plt.show()
+    import sys
+    sys.exit()
 
-cmap = coil_maps.coil_maps(Temp_coil_maps_input)
 
-[SOS_im, C_im] = image_recombination.imageRecombination(cmap, im)
 
-C_im = C_im / np.max(C_im)
+    cmap = coil_maps.coil_maps(Temp_coil_maps_input)
+
+    [SOS_im, C_im] = image_recombination.imageRecombination(cmap, im)
+
+    C_im = C_im / np.max(C_im)
 # print(C_im[87,67])
 
-centerX = np.round(0.5 * float(np.shape(C_im)[0])) + 1
-centerY = np.round(0.5 * float(np.shape(C_im)[1])) + 1
+    centerX = np.round(0.5 * float(np.shape(C_im)[0])) + 1
+    centerY = np.round(0.5 * float(np.shape(C_im)[1])) + 1
 
-dim1 = np.round(0.5 * np.shape(C_im)[0])
-dim2 = np.round(0.5 * np.shape(C_im)[1])
-C_im = C_im[int(centerX - dim1) - 1: int(centerX + dim1 - 1), int(centerY - dim2) - 1: int(centerY + dim2 - 1)]
-# print(C_im[86, 202])
-C_im_cv = np.float32(C_im)
-# print(C_im_cv.dtype)
-# print(C_im_cv[86, 202])
-C_im = cv2.bilateralFilter(C_im_cv, sigmaSpace=0.5, sigmaColor=100, d=9)
-# print(np.shape(C_im))
-# print(C_im[86, 202])
-C_im_cv = C_im.astype(np.float64)
-# print(C_im_cv[86, 202])
-# imshow(C_im_cv)
+    dim1 = np.round(0.5 * np.shape(C_im)[0])
+    dim2 = np.round(0.5 * np.shape(C_im)[1])
+    C_im = C_im[int(centerX - dim1) - 1: int(centerX + dim1 - 1), int(centerY - dim2) - 1: int(centerY + dim2 - 1)]
+    # print(C_im[0,0])
+    C_im_cv = np.float32(C_im)
 
-C_im = fixAspectRatio.fix_aspect_ratio(UI, C_im)
-print(C_im[86, 202])
+    C_im = cv2.bilateralFilter(C_im_cv, sigmaSpace=0.42, sigmaColor=0.5, d=5)
 
-x = np.transpose([x for x in range(0, np.shape(C_im)[0])])
-y = np.transpose([y for y in range(0, np.shape(C_im)[1])])
-xq = np.transpose([x for x in np.arange(0, np.shape(C_im)[0], np.shape(C_im)[0] / Recon_resolution)])
-yq = np.transpose([y for y in np.arange(0, np.shape(C_im)[1], np.shape(C_im)[1] / Recon_resolution)])
-[X, Y] = np.meshgrid(x, y)
-[Xq, Yq] = np.meshgrid(xq, yq)
+    # print(C_im[0,0])
 
-# eng = matlab.engine.start_matlab()
-# corrected_image = eng.interp2(X,Y,C_im,Xq,Yq,'spline')
-# print(np.shape(corrected_image))
+    C_im = fixAspectRatio.fix_aspect_ratio(UI, C_im)
+    # print(C_im[0,0])
+    # print(C_im[200,56])
+
+    x = np.transpose([x for x in range(0, np.shape(C_im)[0])])
+    y = np.transpose([y for y in range(0, np.shape(C_im)[1])])
+    xq = np.transpose([x for x in np.arange(0, np.shape(C_im)[0], np.shape(C_im)[0] / Recon_resolution)])
+    yq = np.transpose([y for y in np.arange(0, np.shape(C_im)[1], np.shape(C_im)[1] / Recon_resolution)])
+    [X, Y] = np.meshgrid(x, y)
+    [Xq, Yq] = np.meshgrid(xq, yq)
+
+    corrected_image_fn = interpolate.RectBivariateSpline(x,y,C_im)
+    corrected_image = np.transpose(corrected_image_fn.ev(X, Y))
+    # print(corrected_image[0,0])
+    # print(C_im[200,56])
+    # corrected_image = np.dot((2**16),np.abs(corrected_image))
+    # print(corrected_image[0,0]
+    # print(corrected_image[200,56])
+    # corrected_image = np.resize(corrected_image,[Recon_resolution,Recon_resolution])
+    # print(corrected_image[0,0])
+    # print(corrected_image[200,56])
+
+    corrected_image = np.flip(corrected_image,0)
+    print(corrected_image[0,1])
+    print(corrected_image[0,0])
+
+    for i in range(0, len(corrected_image)):
+         corrected_image[i]= np.roll(corrected_image[i],[0,0])
+    # output[:,:,slice_count] = corrected_image
+print(corrected_image)
+im = Image.fromarray(corrected_image*255)
+# im = im.convert('L')
+# im = im.show()
+
+im.save('out.png')
 # import sys
 # sys.exit()
-# corrected_image = interpolate.interp2d(X,Y,C_im,'spline')
-
-
 # WRITING DICOM FILE:
 for slice_count in range(0, number_of_slices):
-    filepath = 'C:\dicomImages\\'
+    filepath = 'C:\dicomImage\\'
     T = str(slice_count)
     filepath = filepath + T
     filepath = filepath + '.dcm'
     print(filepath)
-    import sys
 
-    sys.exit()
+
 
     # eng.dicomwrite(uint16(round(output(:,:,slice_count))),str)
 
 end = datetime.datetime.now()
 
 print(end - now)
-
-# import numpy as np
-# A=np.array([[1,2,3],[4,5,6]])
-# for i in range(len(A)):
-#     A[i] = np.roll(A[i],[0,1])
-# print A
