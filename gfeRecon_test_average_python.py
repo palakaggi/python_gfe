@@ -220,21 +220,16 @@ for slice_count in range(0, number_of_slices):
         im[:, :, j] = np.fft.ifftshift(im[:, :, j])
 # ===================================================================================================
 #     print(np.shape(Rx))
-    for i in range(0, np.shape(Rx)[0]):
-        plt.subplot(5,5,i+1)
-        imshow(abs(im[:,:,i]),cmap='gray')
-    plt.show()
-    import sys
-    sys.exit()
+#     for i in range(0, np.shape(Rx)[0]):
+#         plt.subplot(5,5,i+1)
+#         imshow(abs(im[:,:,i]),cmap='gray')
+#     plt.show()
 
 
-
+#ESTIMATE COIL_MAPS
     cmap = coil_maps.coil_maps(Temp_coil_maps_input)
-
     [SOS_im, C_im] = image_recombination.imageRecombination(cmap, im)
-
     C_im = C_im / np.max(C_im)
-# print(C_im[87,67])
 
     centerX = np.round(0.5 * float(np.shape(C_im)[0])) + 1
     centerY = np.round(0.5 * float(np.shape(C_im)[1])) + 1
@@ -247,11 +242,7 @@ for slice_count in range(0, number_of_slices):
 
     C_im = cv2.bilateralFilter(C_im_cv, sigmaSpace=0.42, sigmaColor=0.5, d=5)
 
-    # print(C_im[0,0])
-
     C_im = fixAspectRatio.fix_aspect_ratio(UI, C_im)
-    # print(C_im[0,0])
-    # print(C_im[200,56])
 
     x = np.transpose([x for x in range(0, np.shape(C_im)[0])])
     y = np.transpose([y for y in range(0, np.shape(C_im)[1])])
@@ -262,30 +253,17 @@ for slice_count in range(0, number_of_slices):
 
     corrected_image_fn = interpolate.RectBivariateSpline(x,y,C_im)
     corrected_image = np.transpose(corrected_image_fn.ev(X, Y))
-    # print(corrected_image[0,0])
-    # print(C_im[200,56])
-    # corrected_image = np.dot((2**16),np.abs(corrected_image))
-    # print(corrected_image[0,0]
-    # print(corrected_image[200,56])
-    # corrected_image = np.resize(corrected_image,[Recon_resolution,Recon_resolution])
-    # print(corrected_image[0,0])
-    # print(corrected_image[200,56])
-
+    corrected_image = cv2.resize(corrected_image, dsize=(Recon_resolution,Recon_resolution), interpolation=cv2.INTER_CUBIC)
     corrected_image = np.flip(corrected_image,0)
-    print(corrected_image[0,1])
-    print(corrected_image[0,0])
 
     for i in range(0, len(corrected_image)):
-         corrected_image[i]= np.roll(corrected_image[i],[0,0])
-    # output[:,:,slice_count] = corrected_image
-print(corrected_image)
+         corrected_image[i] = np.roll(corrected_image[i],[0,0])
+
 im = Image.fromarray(corrected_image*255)
-# im = im.convert('L')
-# im = im.show()
+im = im.convert('L')
 
 im.save('out.png')
-# import sys
-# sys.exit()
+
 # WRITING DICOM FILE:
 for slice_count in range(0, number_of_slices):
     filepath = 'C:\dicomImage\\'
