@@ -3,8 +3,10 @@ import cv2
 from supportFiles import fermi, coil_maps, image_recombination, fixAspectRatio
 from scipy import interpolate
 from PIL import Image
-import matplotlib.pyplot as plt
-import scipy.misc
+import os
+import SimpleITK as sitk
+# import matplotlib.pyplot as plt
+# import scipy.misc
 
 # from matplotlib import pylab
 from pylab import *
@@ -186,8 +188,8 @@ for slice_count in range(0, number_of_slices):
         Temp = np.fft.ifft2(Temp)
         Temp = np.fft.ifftshift(Temp)
 
-        for i in range(len(Temp)):
-            Temp[i] = np.roll(Temp[i], [0, 30])
+        # for i in range(len(Temp)):
+        #     Temp[i] = np.roll(Temp[i], [0, 30])
 
         center_v = 0.5 * (Temp[int(yres / 2) - 1, int(xres / 2) - 1] + Temp[int(yres / 2) + 1, int(xres / 2) + 1])
         Temp[int(yres / 2), :] = 0.5 * (Temp[int(yres / 2), :] + Temp[int(yres / 2) - 2, :])
@@ -261,18 +263,16 @@ for slice_count in range(0, number_of_slices):
 
 im = Image.fromarray(corrected_image*255)
 im = im.convert('L')
-
+writer = sitk.ImageFileWriter()
 im.save('out.png')
-
 # WRITING DICOM FILE:
-for slice_count in range(0, number_of_slices):
-    filepath = 'C:\dicomImage\\'
+for slice_count in range(1, number_of_slices+1):
+    filepath = ''
     T = str(slice_count)
     filepath = filepath + T
     filepath = filepath + '.dcm'
     print(filepath)
-
-
+    writer.SetFileName(os.path.join(filepath))
 
     # eng.dicomwrite(uint16(round(output(:,:,slice_count))),str)
 
