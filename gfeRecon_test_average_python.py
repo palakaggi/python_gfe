@@ -264,7 +264,8 @@ for slice_count in range(0, number_of_slices):
 im = Image.fromarray(corrected_image*255)
 im = im.convert('L')
 writer = sitk.ImageFileWriter()
-im.save('out.png')
+im.save('out-with-flip.png')
+
 # WRITING DICOM FILE:
 for slice_count in range(1, number_of_slices+1):
     filepath = ''
