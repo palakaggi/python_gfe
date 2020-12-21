@@ -1,4 +1,5 @@
 from mat4py import loadmat
+import time
 import cv2
 from supportFiles import fermi, coil_maps, image_recombination, fixAspectRatio
 from scipy import interpolate
@@ -11,7 +12,7 @@ import SimpleITK as sitk
 # from matplotlib import pylab
 from pylab import *
 
-now = datetime.datetime.now()
+
 
 # DEFINING VARIABLES AND LOADING DATA
 globalParameters = loadmat('globalParameters.mat')
@@ -64,12 +65,9 @@ sig = np.moveaxis(sig, (0, 1, 2, 3), (-2, -3, -1, -4))
 sig_complex1 = np.reshape(sig_complex1, (int(total_channels), int(xres), int(number_of_slices), int(yres)), order='F')
 sig_complex1 = np.moveaxis(sig_complex1, (0, 1, 2, 3), (-2, -3, -1, -4))
 
-
+# print(np.shape(sig))
 # print(sig[16][105][18][0])
 # print(sig_complex1[16][105][18][0])
-# import sys
-# sys.exit()
-
 def gfeSpoilPhase(nr_of_pe):
     # print (nr_of_pe)
     spoiler_angle = 55
@@ -173,24 +171,19 @@ if UI['sliceOrientation'] == 'Coronal':
 if UI['sliceOrientation'] == 'Sagittal':
     pixvalX = 0
 
+
 im = np.zeros((np.shape(sig)[0], np.shape(sig)[0], len(Rx)), dtype=complex)
 Temp_coil_maps_input = np.zeros((np.shape(sig)[0], np.shape(sig)[0], len(Rx)), dtype=complex)
 output = np.zeros((Recon_resolution, Recon_resolution, number_of_slices), float)
 
 sig = sig[:, :, Rx, :]
 sig_complex1 = sig_complex1[:, :, Rx, :]
+now = time.time()
 
 for slice_count in range(0, number_of_slices):
     for j in range(len(Rx)):
-        Temp = np.squeeze(sig[:, :, j, slice_count])
-        Temp_comp = np.squeeze(sig_complex1[:, :, j, slice_count])
-        Temp = np.fft.ifftshift(Temp) + np.fft.ifftshift(Temp_comp)
-        Temp = np.fft.ifft2(Temp)
-        Temp = np.fft.ifftshift(Temp)
-
-        # for i in range(len(Temp)):
-        #     Temp[i] = np.roll(Temp[i], [0, 30])
-
+        Temp = np.squeeze(sig[:, :, j, slice_count]) + np.squeeze(sig_complex1[:, :, j, slice_count])
+        Temp = np.fft.ifftshift(np.fft.ifft2(np.fft.ifftshift(Temp)))
         center_v = 0.5 * (Temp[int(yres / 2) - 1, int(xres / 2) - 1] + Temp[int(yres / 2) + 1, int(xres / 2) + 1])
         Temp[int(yres / 2), :] = 0.5 * (Temp[int(yres / 2), :] + Temp[int(yres / 2) - 2, :])
         Temp[int(yres / 2), int(xres / 2)] = center_v
@@ -199,72 +192,54 @@ for slice_count in range(0, number_of_slices):
                        int(round(xres / 2) + round(0.5 * xres / oversample_factor))):
             check.append(x)
         Temp = Temp[:, check]
-
-        Temp = np.fft.fftshift(Temp)
-        # print(Temp[0,0])
-        Temp = np.fft.fft2(Temp)
-        # print(Temp[0, 0])
-
-        Temp = np.fft.fftshift(Temp)
+        Temp = np.fft.fftshift(np.fft.fft2(np.fft.fftshift(Temp)))
         Temp = f_filter * Temp
-        # print(Temp[0,0])
-
         diag = np.array(np.squeeze(np.exp(complex(0, -1) * spoiler_phase)))
-
-        Temp_diag = np.diag(diag)
-        Temp[:, :] = np.dot(Temp_diag, Temp)
-
+        # Temp_diag = np.diag(diag)
+        Temp[:, :] = np.dot(np.diag(diag), Temp)
         Temp_coil_maps_input[:, :, j] = Temp
-        # print Temp_coil_maps_input[112][112]
-
-        im[:, :, j] = np.fft.ifftshift(Temp[:, :])
-        im[:, :, j] = np.fft.ifft2(im[:, :, j])
-        im[:, :, j] = np.fft.ifftshift(im[:, :, j])
+        im[:, :, j] = np.fft.ifftshift(np.fft.ifft2(np.fft.ifftshift(Temp[:, :])))
 # ===================================================================================================
-#     print(np.shape(Rx))
-#     for i in range(0, np.shape(Rx)[0]):
-#         plt.subplot(5,5,i+1)
-#         imshow(abs(im[:,:,i]),cmap='gray')
-#     plt.show()
-
-
+    print(np.shape(Rx))
+    for i in range(0, np.shape(Rx)[0]):
+        plt.subplot(5,5,i+1)
+        imshow(abs(im[:,:,i]),cmap='gray')
+    plt.show()
+    import sys
+    sys.exit()
 #ESTIMATE COIL_MAPS
+    print('coil mapsss.....')
+    start = time.time()
     cmap = coil_maps.coil_maps(Temp_coil_maps_input)
+    print(time.time()-start)
     [SOS_im, C_im] = image_recombination.imageRecombination(cmap, im)
     C_im = C_im / np.max(C_im)
-
     centerX = np.round(0.5 * float(np.shape(C_im)[0])) + 1
     centerY = np.round(0.5 * float(np.shape(C_im)[1])) + 1
-
     dim1 = np.round(0.5 * np.shape(C_im)[0])
     dim2 = np.round(0.5 * np.shape(C_im)[1])
     C_im = C_im[int(centerX - dim1) - 1: int(centerX + dim1 - 1), int(centerY - dim2) - 1: int(centerY + dim2 - 1)]
-    # print(C_im[0,0])
     C_im_cv = np.float32(C_im)
-
     C_im = cv2.bilateralFilter(C_im_cv, sigmaSpace=0.42, sigmaColor=0.5, d=5)
-
     C_im = fixAspectRatio.fix_aspect_ratio(UI, C_im)
-
     x = np.transpose([x for x in range(0, np.shape(C_im)[0])])
     y = np.transpose([y for y in range(0, np.shape(C_im)[1])])
     xq = np.transpose([x for x in np.arange(0, np.shape(C_im)[0], np.shape(C_im)[0] / Recon_resolution)])
     yq = np.transpose([y for y in np.arange(0, np.shape(C_im)[1], np.shape(C_im)[1] / Recon_resolution)])
     [X, Y] = np.meshgrid(x, y)
     [Xq, Yq] = np.meshgrid(xq, yq)
-
     corrected_image_fn = interpolate.RectBivariateSpline(x,y,C_im)
     corrected_image = np.transpose(corrected_image_fn.ev(X, Y))
     corrected_image = cv2.resize(corrected_image, dsize=(Recon_resolution,Recon_resolution), interpolation=cv2.INTER_CUBIC)
-    corrected_image = np.flip(corrected_image,0)
-
+    # corrected_image = np.flip(corrected_image,0)
     for i in range(0, len(corrected_image)):
          corrected_image[i] = np.roll(corrected_image[i],[0,0])
 
 im = Image.fromarray(corrected_image*255)
 im = im.convert('L')
 writer = sitk.ImageFileWriter()
-im.save('out-with-flip.png')
+im.save('out.png')
+
 
 # WRITING DICOM FILE:
 for slice_count in range(1, number_of_slices+1):
@@ -279,4 +254,4 @@ for slice_count in range(1, number_of_slices+1):
 
 end = datetime.datetime.now()
 
-print(end - now)
+# print(end - now)
