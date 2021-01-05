@@ -1,5 +1,4 @@
 from mat4py import loadmat
-import time
 import cv2
 from supportFiles import fermi, coil_maps, image_recombination, fixAspectRatio
 from scipy import interpolate
@@ -12,12 +11,11 @@ import SimpleITK as sitk
 # from matplotlib import pylab
 from pylab import *
 
-
-
 # DEFINING VARIABLES AND LOADING DATA
 globalParameters = loadmat('globalParameters.mat')
 data = loadmat('recon_data.mat')
 UI = data['UI']
+# print(UI['coilType'])
 yres = UI['resolutionY']
 xres = float(float(UI['resolutionX']) / float(UI['BW'])) * float(globalParameters['sampling_rate'])
 
@@ -34,7 +32,7 @@ bdata = np.zeros((chassis_cards, file_size), int)
 sig = np.zeros((int(total_channels), int(temp_val)), dtype='float')
 sig_complex = np.zeros((int(total_channels), int(temp_val)), dtype='float')
 size_1 = np.shape(sig_complex)
-# print(sig[0][0])
+
 # ASSIGNING VALUES TO BDATA
 Recon_resolution = 1024
 handle = open('rx_data_0.bin', "rb")
@@ -91,7 +89,6 @@ elif UI['gfeVariants'] == 'Default':
     spoiler_phase = np.zeros(yres, 1)
 
 # DEFINING AVG_SIGNAL BASED ON UI.SIGNALAVERAGES:
-
 if UI['signalAverages'] > 1:
     avg_sig_real = np.zeros((sig.shape[0], sig.shape[1], sig.shape[2], number_of_slices, UI['signalAverages']), float)
     avg_sig_real[:, :, :, :, 0] = sig
@@ -200,13 +197,14 @@ for slice_count in range(0, number_of_slices):
         Temp_coil_maps_input[:, :, j] = Temp
         im[:, :, j] = np.fft.ifftshift(np.fft.ifft2(np.fft.ifftshift(Temp[:, :])))
 # ===================================================================================================
-    print(np.shape(Rx))
-    for i in range(0, np.shape(Rx)[0]):
-        plt.subplot(5,5,i+1)
-        imshow(abs(im[:,:,i]),cmap='gray')
-    plt.show()
-    import sys
-    sys.exit()
+#     print(np.shape(Rx))
+#     for i in range(0, np.shape(Rx)[0]):
+#         plt.subplot(5,5,i+1)
+#         imshow(abs(im[:,:,i]),cmap='gray')
+#     plt.show()
+#     import sys
+#     sys.exit()
+
 #ESTIMATE COIL_MAPS
     print('coil mapsss.....')
     start = time.time()
@@ -239,7 +237,6 @@ im = Image.fromarray(corrected_image*255)
 im = im.convert('L')
 writer = sitk.ImageFileWriter()
 im.save('out.png')
-
 
 # WRITING DICOM FILE:
 for slice_count in range(1, number_of_slices+1):

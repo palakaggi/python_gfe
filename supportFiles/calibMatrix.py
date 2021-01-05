@@ -2,7 +2,6 @@ import numpy as np
 import time
 
 def calibMatrix(Data,kSize):
-
     [sx,sy,sz] = np.shape(Data)
 
     A = np.zeros(((sx-kSize[0]+1)*(sy-kSize[1]+1),np.prod(kSize),sz),dtype=complex)

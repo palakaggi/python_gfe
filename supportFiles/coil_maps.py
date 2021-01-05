@@ -5,6 +5,7 @@ import time
 
 def coil_maps(I):
     start = time.time()
+    start = time.time()
     rr = 32
     cc = rr
     ncalib = [rr, cc]
@@ -23,7 +24,10 @@ def coil_maps(I):
     calib_data = np.squeeze(calib_data)
     row = np.shape(I)[1]
     # col = np.shape(I)[1]
+    print(time.time()-start)
 
     coil_maps = map_code(calib_data, row, row)
-
+    print(time.time() - start)
+    import sys
+    sys.exit()
     return coil_maps
